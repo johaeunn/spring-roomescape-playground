@@ -1,0 +1,4 @@
+TRUNCATE TABLE reservation RESTART IDENTITY;
+
+INSERT INTO time (time)
+VALUES ('10:00');

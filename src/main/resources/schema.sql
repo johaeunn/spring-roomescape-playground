@@ -6,3 +6,9 @@ CREATE TABLE reservation (
     PRIMARY KEY (id),
     CONSTRAINT uq_reservation_name_date_time UNIQUE (name, date, time)
 );
+
+CREATE TABLE time (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    time TIME NOT NULL,
+    PRIMARY KEY (id)
+);
