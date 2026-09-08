@@ -64,4 +64,17 @@ public class TimeControllerTest {
                 .body("id", is(1))
                 .body("time", is("11:00"));
     }
+
+    @Test
+    @Sql(
+            scripts = "/time-test-data.sql",
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
+    )
+    void 시간을_삭제할_수_있다() {
+        given()
+                .when()
+                .delete("times/1")
+                .then()
+                .statusCode(204);
+    }
 }

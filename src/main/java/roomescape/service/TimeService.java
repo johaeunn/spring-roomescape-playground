@@ -4,6 +4,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Time;
 import roomescape.exception.DuplicateTimeException;
+import roomescape.exception.TimeNotFoundException;
 import roomescape.repository.TimeRepository;
 
 import java.time.LocalTime;
@@ -29,6 +30,12 @@ public class TimeService {
             return timeRepository.save(time);
         } catch (DuplicateKeyException e) {
             throw new DuplicateTimeException("이미 존재하는 시간입니다.");
+        }
+    }
+
+    public void delete(Long id) {
+        if (!timeRepository.deleteById(id)) {
+            throw new TimeNotFoundException("존재하지 않는 시간입니다.");
         }
     }
 }

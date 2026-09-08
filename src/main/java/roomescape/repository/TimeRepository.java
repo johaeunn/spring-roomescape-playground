@@ -45,4 +45,13 @@ public class TimeRepository {
                 time.getTime()
         );
     }
+
+    public boolean deleteById(Long id) {
+        int deleteCount = jdbcTemplate.update(
+                "DELETE FROM time WHERE id = ?",
+                id
+        );
+
+        return deleteCount > 0;
+    }
 }

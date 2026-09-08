@@ -13,6 +13,8 @@ import java.time.LocalTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @JdbcTest
 @Import(TimeRepository.class)
@@ -23,6 +25,8 @@ public class TimeRepositoryTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    private static final Long NON_EXISTENT_ID = 999L;
 
     @Test
     @Sql(
@@ -56,5 +60,32 @@ public class TimeRepositoryTest {
 
         assertEquals(savedTime.getId(), persistedTime.getId());
         assertEquals(savedTime.getTime(), persistedTime.getTime());
+    }
+
+    @Test
+    void 존재하는_시간_id로_삭제하면_true를_반환한다() {
+        jdbcTemplate.update(
+                "INSERT INTO time (time) VALUES (?)",
+                LocalTime.of(10, 0)
+        );
+
+        Long id = jdbcTemplate.queryForObject(
+                "SELECT id FROM time WHERE time = ?",
+                Long.class,
+                LocalTime.of(10, 0)
+        );
+
+        assertTrue(timeRepository.deleteById(id));
+
+        assertFalse(jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM time WHERE id = ?",
+                Boolean.class,
+                id
+        ));
+    }
+
+    @Test
+    void 존재하지_않는_시간_id로_삭제하면_false를_반환한다() {
+        assertFalse(timeRepository.deleteById(NON_EXISTENT_ID));
     }
 }
