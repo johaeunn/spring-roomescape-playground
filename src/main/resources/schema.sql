@@ -10,5 +10,6 @@ CREATE TABLE reservation (
 CREATE TABLE time (
     id BIGINT NOT NULL AUTO_INCREMENT,
     time TIME NOT NULL,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    CONSTRAINT uq_time UNIQUE (time)
 );

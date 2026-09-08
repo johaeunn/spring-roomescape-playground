@@ -7,6 +7,7 @@ import roomescape.domain.Time;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class TimeRepository {
@@ -29,6 +30,19 @@ public class TimeRepository {
                         rs.getLong("id"),
                         rs.getObject("time", LocalTime.class)
                 )
+        );
+    }
+
+    public Time save(Time time) {
+        Map<String, Object> parameters = Map.of(
+                "time", time.getTime()
+        );
+
+        Long id = simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
+
+        return new Time(
+                id,
+                time.getTime()
         );
     }
 }

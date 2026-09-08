@@ -37,4 +37,24 @@ public class TimeRepositoryTest {
         assertEquals(1L, first.getId());
         assertEquals(LocalTime.of(10, 0), first.getTime());
     }
+
+    @Test
+    void 시간을_저장할_수_있다() {
+        Time requestTime = new Time(LocalTime.of(10,0));
+        Time savedTime = timeRepository.save(requestTime);
+
+        Long savedId = savedTime.getId();
+
+        Time persistedTime = jdbcTemplate.queryForObject(
+                "SELECT id, time FROM time WHERE id = ?",
+                (rs, rowNum) -> new Time(
+                        rs.getLong("id"),
+                        rs.getObject("time", LocalTime.class)
+                ),
+                savedId
+        );
+
+        assertEquals(savedTime.getId(), persistedTime.getId());
+        assertEquals(savedTime.getTime(), persistedTime.getTime());
+    }
 }

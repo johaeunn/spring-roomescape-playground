@@ -14,6 +14,10 @@ public class Time {
         this.time = time;
     }
 
+    public Time(LocalTime time) {
+        this(null, time);
+    }
+
     public Long getId() {
         return id;
     }
