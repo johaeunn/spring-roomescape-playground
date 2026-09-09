@@ -46,7 +46,11 @@ public class TimeControllerTest {
 
     @Test
     @Sql(
-            statements = "TRUNCATE TABLE time RESTART IDENTITY",
+            statements = {
+                    "DELETE FROM reservation",
+                    "DELETE FROM time",
+                    "ALTER TABLE time ALTER COLUMN id RESTART WITH 1"
+            },
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
     )
     void 시간을_추가할_수_있다() {

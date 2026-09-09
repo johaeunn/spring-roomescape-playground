@@ -8,6 +8,7 @@ import roomescape.domain.Time;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class TimeRepository {
@@ -31,6 +32,19 @@ public class TimeRepository {
                         rs.getObject("time", LocalTime.class)
                 )
         );
+    }
+
+    public Optional<Time> findById(Long id) {
+        return jdbcTemplate.query(
+                        "SELECT id, time FROM time WHERE id = ?",
+                        (rs, rowNum) -> new Time(
+                                rs.getLong("id"),
+                                rs.getObject("time", LocalTime.class)
+                        ),
+                        id
+                )
+                .stream()
+                .findFirst();
     }
 
     public Time save(Time time) {

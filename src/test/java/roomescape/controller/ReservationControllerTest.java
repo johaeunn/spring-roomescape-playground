@@ -56,10 +56,10 @@ public class ReservationControllerTest {
     @Test
     void 예약을_추가할_수_있다() {
         String date = LocalDate.now().plusDays(1).toString();
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", date);
-        params.put("time", "12:00");
+        params.put("timeId", 1L);
 
         given()
                 .contentType(ContentType.JSON)
@@ -72,7 +72,7 @@ public class ReservationControllerTest {
                 .body("id", is(4))
                 .body("name", is("브라운"))
                 .body("date", is(date))
-                .body("time", is("12:00"));
+                .body("time", is("10:00"));
     }
 
     @Test
