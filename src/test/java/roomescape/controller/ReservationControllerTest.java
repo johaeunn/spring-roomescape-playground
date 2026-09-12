@@ -50,7 +50,7 @@ public class ReservationControllerTest {
                 .get("/reservations")
                 .then()
                 .statusCode(200)
-                .body("[0].time", is("10:00"));
+                .body("[0].time.time", is("10:00"));
     }
 
     @Test
@@ -59,7 +59,7 @@ public class ReservationControllerTest {
         Map<String, Object> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", date);
-        params.put("timeId", 1L);
+        params.put("time", 1L);
 
         given()
                 .contentType(ContentType.JSON)
@@ -72,7 +72,7 @@ public class ReservationControllerTest {
                 .body("id", is(4))
                 .body("name", is("브라운"))
                 .body("date", is(date))
-                .body("time", is("10:00"));
+                .body("time.time", is("10:00"));
     }
 
     @Test
