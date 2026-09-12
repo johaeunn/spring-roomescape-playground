@@ -96,4 +96,20 @@ public class ReservationRepository {
 
         return exists;
     }
+
+    public boolean existsByTimeId(Long timeId) {
+        Boolean exists = jdbcTemplate.queryForObject(
+                """
+                SELECT EXISTS (
+                    SELECT 1
+                    FROM reservation
+                    WHERE time_id = ?
+                )
+                """,
+                Boolean.class,
+                timeId
+        );
+
+        return exists;
+    }
 }

@@ -178,4 +178,37 @@ public class ReservationRepositoryTest {
     void 존재하지_않는_예약_id로_삭제하면_false를_반환한다() {
         assertFalse(reservationRepository.deleteById(NON_EXISTENT_ID));
     }
+
+    @Test
+    void 해당_시간을_사용하는_예약이_존재하면_true를_반환한다() {
+        Long timeId = 1L;
+
+        jdbcTemplate.update(
+                "INSERT INTO time (id, time) VALUES (?, ?)",
+                timeId,
+                LocalTime.of(10, 0)
+        );
+
+        jdbcTemplate.update(
+                "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
+                NAME,
+                TODAY,
+                timeId
+        );
+
+        assertTrue(reservationRepository.existsByTimeId(timeId));
+    }
+
+    @Test
+    void 해당_시간을_사용하는_예약이_존재하지_않으면_false를_반환한다() {
+        Long timeId = 1L;
+
+        jdbcTemplate.update(
+                "INSERT INTO time (id, time) VALUES (?, ?)",
+                timeId,
+                LocalTime.of(10, 0)
+        );
+
+        assertFalse(reservationRepository.existsByTimeId(timeId));
+    }
 }
