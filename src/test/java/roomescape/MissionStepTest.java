@@ -201,6 +201,12 @@ public class MissionStepTest {
     }
 
     @Test
+    @Sql(statements = {
+            "DELETE FROM reservation",
+            "DELETE FROM time",
+            "ALTER TABLE reservation ALTER COLUMN id RESTART WITH 1",
+            "ALTER TABLE time ALTER COLUMN id RESTART WITH 1"
+    })
     void 팔단계() {
         Map<String, String> params = new HashMap<>();
         params.put("time", "10:00");
