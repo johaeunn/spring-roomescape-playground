@@ -58,7 +58,6 @@ public class MissionStepTest {
                 .body("size()", is(3));
     }
 
-    @Disabled("예약 API가 timeId 기반으로 변경됨")
     @Test
     @Sql("/reservation-test-data.sql")
     void 삼단계() {
@@ -67,7 +66,7 @@ public class MissionStepTest {
 
         params.put("name", "브라운");
         params.put("date", reservationDate.toString());
-        params.put("time", "15:40");
+        params.put("time", "1");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -129,10 +128,25 @@ public class MissionStepTest {
         }
     }
 
-    @Disabled("예약 API가 timeId 기반으로 변경됨")
     @Test
+    @Sql(statements = {
+            "DELETE FROM reservation",
+            "DELETE FROM time",
+            "ALTER TABLE reservation ALTER COLUMN id RESTART WITH 1",
+            "ALTER TABLE time ALTER COLUMN id RESTART WITH 1"
+    })
     void 육단계() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
+        jdbcTemplate.update(
+                "INSERT INTO time (id, time) VALUES (?, ?)",
+                1L,
+                "15:40"
+        );
+
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
+                "브라운",
+                "2023-08-05",
+                1L
+        );
 
         List<Reservation> reservations = RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -145,16 +159,26 @@ public class MissionStepTest {
         assertThat(reservations.size()).isEqualTo(count);
     }
 
-    @Disabled("예약 API가 timeId 기반으로 변경됨")
     @Test
-    @Sql(statements = "TRUNCATE TABLE reservation RESTART IDENTITY")
+    @Sql(statements = {
+            "DELETE FROM reservation",
+            "DELETE FROM time",
+            "ALTER TABLE reservation ALTER COLUMN id RESTART WITH 1",
+            "ALTER TABLE time ALTER COLUMN id RESTART WITH 1"
+    })
     void 칠단계() {
+        jdbcTemplate.update(
+                "INSERT INTO time (id, time) VALUES (?, ?)",
+                1L,
+                "10:00"
+        );
+
         LocalDate reservationDate = LocalDate.now(clock).plusDays(1);
 
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", reservationDate.toString());
-        params.put("time", "10:00");
+        params.put("time", "1");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -176,7 +200,6 @@ public class MissionStepTest {
         assertThat(countAfterDelete).isEqualTo(0);
     }
 
-    @Disabled("예약 API가 timeId 기반으로 변경됨")
     @Test
     void 팔단계() {
         Map<String, String> params = new HashMap<>();
